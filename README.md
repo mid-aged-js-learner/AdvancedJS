@@ -205,8 +205,87 @@ JavaScript 高级程序设计学习
         console.log(values);        // [1, 5, 9, 10, 20, 25, 105]
         ```
     - 可以修改比较函数，实现按照降序排序
+- 操作方法
+    - `concat` 方法：将接收的参数添加到数组末尾，返回新数组，原数组不变
+        ```
+        var colors = ['red', 'green', 'blue'];
+        var colors2 = colors.concat('yellow', ['black', 'brown']);
+        console.log(colors);        // ['red', 'green', 'blue'];
+        console.log(colors2);       // ['red', 'green', 'blue', 'yellow', 'black', 'brown']
+        ```
+    - `slice` 方法：接收起始位置和结束位置两个参数，返回两个位置之间的元素组成的新数组，原数组不变，默认传入一个参数时，该参数为起始位置，结束位置默认为 `array.length`
+        ```
+        var colors3 = colors2.slice(1);
+        var colors4 = colors2.slice(1, 4);
+        console.log(colors2);   // ['red', 'green', 'blue', 'yellow', 'black', 'brown']
+        console.log(colors3);   // ['green', 'blue', 'yellow', 'black', 'brown']
+        console.log(colors4);   // ['green', 'blue', 'yellow']
+        ```
+    - `splice` 方法：用于向数组中插入元素，可实现删除、插入、替换功能，接收三个参数：第一个是开始插入的位置，第二个是要删除的元素数量，第三个是要插入的元素
+        - 删除：只需要传入两个参数，起始位置和要删除的元素数量
+        - 插入：传入三个参数，起始位置、`0`（一个原始元素也不删除）、插入的元素
+        - 替换：传入三个参数，起始位置、要替换的项数、替换的新元素
+        ```
+        var colors = ['red', 'green', 'blue'];
+        // 删除第一项
+        colors.splice(0, 1);
+        console.log(colors);        // ['green', 'blue']
+        // 从位置1处开始插入两项：'yellow', 'orange'
+        colors.splice(1, 0, 'yellow', 'orange');
+        console.log(colors);        // ['green', 'yellow', 'orange', 'blue']
+        // 将 'yellow' 替换为两项：'red' 和 'purple'
+        colors.splice(1, 1, 'red', 'purple');
+        console.log(colors);        // ['green', 'red', 'purple', 'orange', 'blue']
+        ```
+- 位置方法
+    - `indexOf` 和 `lastIndexOf` 方法：接收两个参数：要查找的元素值和查找起点位置的索引（可选）
+        ```
+        var numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+        console.log(numbers.indexOf(4));        // 3
+        console.log(numbers.indexOf(4, 4));     // 5
+        console.log(numbers.lastIndexOf(4));    // 5
+        console.log(numbers.lastIndexOf(4, 4)); // 3
+        ```
+- 迭代方法：传入两个参数：在每一项上运行和函数和运行在函数的作用域对象（可选）
+    - `every`：对数组中每一项运行给定函数，如果每一项都返回 `true` 则返回 `true`
+    - `some`：对数组中每一项运行给定函数，如果存在一项返回 `true` 则返回 `true`
+    - `filter`：对数组中每一项运行给定函数，返回该函数会返回 `true` 的项组成的数组
+    - `forEach`：对数组中每一项运行给定函数，没有返回值
+    - `map`：对数组中每一项运行给定函数，返回每次函数调用的结果组成的数组
+        ```
+        var numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+        var everyResult = numbers.every(function(value, index, array){
+            return (value > 2);
+        });
+        console.log(everyResult);               // false
+        var someResult = numbers.some(function(value, index, array){
+            return (value > 2);
+        });
+        console.log(someResult);                // true
+        var filterResult = numbers.filter(function(value, index, array){
+            return (value > 2);
+        });
+        console.log(filterResult);              // [3, 4, 5, 4, 3]
+        var mapResult = numbers.map(function(value, index, array){
+            return value * 2;                       
+        });
+        console.log(mapResult);                 // [2, 4, 6, 8, 10, 8, 6, 4, 2]
+        console.log(numbers);                   // [1, 2, 3, 4, 5, 4, 3, 2, 1]
 
-
-
-
-
+        numbers.forEach(function(value, index, arr){
+            arr[index] = value * 2;
+        });
+        console.log(numbers);                   // [2, 4, 6, 8, 10, 8, 6, 4, 2]
+        ```
+- 缩小方法
+    - `reduce`：迭代数组的所有项，构建一个最终返回的值。接收两个参数：一个是在每一项上调用的函数和一个初始值（可选）
+        - 调用的函数接收4个参数：前一个值、当前值、项的索引、数组对象
+        ```
+        var numbers = [1, 2, 3, 4];
+        var arrtonumber = numbers.reduce(function(prev, current, index, arr){
+            return prev * 10 + current;
+        }, 0);
+        console.log(arrtonumber);           // 1234
+        console.log(typeof arrtonumber);    // number
+        ```
+    - `rightReduce`：与 `reduce` 类似，迭代顺序从后向前
