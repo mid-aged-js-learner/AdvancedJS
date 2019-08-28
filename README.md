@@ -289,3 +289,83 @@ JavaScript 高级程序设计学习
         console.log(typeof arrtonumber);    // number
         ```
     - `rightReduce`：与 `reduce` 类似，迭代顺序从后向前
+
+### Date 类型
+- 创建 `Date` 对象
+    - 创建默认 `Date` 对象：使用 `new Date()` ，自动获得当前日期和时间
+    - 根据特定的日期和时间创建对象，必须传入该日期对应的毫秒数(UTC 零时区时间)
+    - 可以使用 `Date.parse()` 和 `Date.UTC()` 方法获取特定日期的好描述
+        - `Date.parse()` 接收一个表示日期的字符串参数，然后尝试根据这个字符串返回相应日期的毫秒数
+        - `Date.UTC()`：接收年份、基于 `0` 的月份、月中的哪一天、小时、分钟、秒以及毫秒，返回表示日期对应的毫秒数
+    - `Date.now()` 方法返回当前日期和时间的毫秒数
+        ```
+        function format_date(date){
+            return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds());
+        }
+
+        var date = new Date();
+        console.log(date);
+        console.log(format_date(date));
+        var date1 = new Date(Date.parse("2019-01-01 12:34:56"));
+        console.log(date1);
+        console.log(format_date(date1));
+        var date2 = new Date(Date.UTC(2019, 0, 1, 0, 0, 0));
+        console.log(date2);
+        console.log(format_date(date2));
+
+        var now = Date.now();
+        console.log(now);
+        console.log(format_date(new Date(now)));
+        ```
+### RegExp 类型
+- 创建一个正则表达式
+    - 使用字面量形式：`/pattern/flags`
+    - 使用 `RegExp` 构造函数，接收两个参数：一个是要匹配的字符串模式 `pattern`，另一个是可选的标志字符串 `flags`
+- `RegExp` 实例方法
+    - `exec`：接收一个要应用模式的字符串参数，返回包含第一个匹配项信息的数组，没有匹配项的情况下返回 `null`
+        - 返回的数组包含两个额外属性：`index`，表示匹配项在字符串中的位置；`input`，表示应用正则表达式的字符串
+        - 数组第一项是与整个模式匹配的字符串，其他项是与模式中的捕获组相匹配的字符串
+        ```
+        var text = "mom and dad and baby";
+        var pattern = /mom( and dad( and baby)?)?/gi;
+        var matches = pattern.exec(text);
+        console.log(matches);
+        ```
+        - 如果不设置全局标志，在同一个字符串上多次调用 `exec` 始终返回第一个匹配项的信息；设置全局标志，每次调用 `exec` 将会在字符串中继续查找新的匹配项
+        ```
+        var text = "cat, bat, sat, fat";
+        var pattern1 = /.at/;
+
+        var matches = pattern1.exec(text);
+        console.log(matches.index);         // 0
+        console.log(matches[0]);            // cat
+        console.log(pattern1.lastIndex);    // 0
+
+        matches = pattern1.exec(text);
+        console.log(matches.index);         // 0
+        console.log(matches[0]);            // cat
+        console.log(pattern1.lastIndex);    // 0
+
+        var pattern2 = /.at/g;
+        matches = pattern2.exec(text);
+        console.log(matches.index);         // 0
+        console.log(matches[0]);            // cat
+        console.log(pattern2.lastIndex);    // 3
+
+        matches = pattern2.exec(text);
+        console.log(matches.index);         // 5
+        console.log(matches[0]);            // bat
+        console.log(pattern2.lastIndex);    // 8
+        ```
+    - `test` 方法：接收一个字符串参数，在模式与该参数匹配的情况下返回 `true`，否则返回 `false`，其余与 `exec` 类似
+        ```
+        var text = "cat, bbt, sat, fdt";
+        var pattern1 = /.at/;
+        console.log(pattern1.test(text));       // true
+        console.log(pattern1.test(text));       // true
+        var pattern2 = /.at/g;
+        console.log(pattern2.test(text));       // true
+        console.log(pattern2.test(text));       // true
+        console.log(pattern2.test(text));       // false
+        ```
+
